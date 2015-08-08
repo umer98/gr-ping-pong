@@ -21,9 +21,6 @@ if (!$userId) {
 	exit();
 }
 
-// Need the database connection:
-require(MYSQL);
-
 $nameQuery = "SELECT firstName, lastName FROM users WHERE userId = '".$userId."'";
 $nameResult = mysqli_query ($dbc, $nameQuery) or trigger_error("Query: $nameQuery\n<br />MySQL Error: " . mysqli_error($dbc));
 

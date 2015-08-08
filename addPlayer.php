@@ -14,9 +14,6 @@ echo '<h1>Add Player</h1><p id="message">Add yourself to the list of ping pong p
 
 // Check for a form submission:
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-	
-	// Need the database:
-	require (MYSQL);
         
         // Array for storing errors:
 	$errors = array();

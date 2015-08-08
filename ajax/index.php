@@ -8,9 +8,6 @@ require('../includes/config.inc.php');
 // Check for a form submission:
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    // Need the database connection:
-    require(MYSQL);
-
     // Array for storing errors:
     $errors = array();
     

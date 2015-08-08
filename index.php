@@ -31,10 +31,6 @@ echo '<h1>Leaderboard</h1>
 // Check for a form submission:
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    // Need the database connection:
-    require(MYSQL);
-
-
     // Make the query:
     $q = "SELECT userID, firstName, lastName, ratio, wins, losses FROM users ORDER BY ratio DESC";
     $r = mysqli_query ($dbc, $q) or trigger_error("Query: $q\n<br />MySQL Error: " . mysqli_error($dbc));

@@ -12,9 +12,6 @@ include ('includes/header.html');
 echo '<h1>New Game</h1><p id="message">Enter the result of your game below.</p>
 ';
 
-// Need the database:
-require (MYSQL);
-
 // Check for a form submission:
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	

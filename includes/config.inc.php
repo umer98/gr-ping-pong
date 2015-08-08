@@ -18,10 +18,25 @@ define('LIVE', FALSE);
 define('EMAIL', 'omarviz@gmail.com', true);
 
 // Site URL (base for all redirections):
-define ('BASE_URL', 'http://localhost:8888/PingPong/', true);
+define ('BASE_URL', 'https://powerful-forest-3806.herokuapp.com/index.php', true);
 
-// Location of the MySQL connection script:
-define ('MYSQL', '/Applications/MAMP/htdocs/mysqli_connect_pingPong.php');
+// Connect to database
+$url = parse_url(getenv("CLEARDB_DATABASE_URL"));
+
+$server = $url["host"];
+$username = $url["user"];
+$password = $url["pass"];
+$db = substr($url["path"], 1);
+
+// Make the connection:
+$dbc = @mysqli_connect ($server, $username, $password, $db);
+
+// If no connection could be made, trigger an error:
+if (!$dbc) {
+	trigger_error ('Could not connect to MySQL: ' . mysqli_connect_error() );
+} else { // Otherwise, set the encoding:
+	mysqli_set_charset($dbc, 'utf8');
+}
 
 // Adjust the time zone for PHP 5.1 and greater:
 date_default_timezone_set ('America/Los_Angeles');

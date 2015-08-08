@@ -53,9 +53,9 @@
 
                         // Check the response:
                         if (ajax.responseText != 'INVALID') {
-
+                            
                             var data = JSON.parse(ajax.responseText);
-
+                            
                             // Clear the error DIV, if it exists:
                             var errorDiv = U.$('errorDiv');
                             if (errorDiv) {
