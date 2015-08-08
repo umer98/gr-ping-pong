@@ -1,0 +1,25 @@
+<?php # header.html
+// This page begins the session, the HTML page, and the layout table.
+
+if(!isset($_SESSION)){
+    session_start();
+}; // Start a session.
+?><!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Grand Rounds Ping Pong Site::<?php echo (isset($page_title)) ? $page_title : 'Welcome!'; ?></title>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="css/a.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script src="js/utilities.js"></script>
+<script src="js/date.js"></script>
+</head>
+<body>
+	<div id="a">
+		<header>
+			<a href="/PingPong/" title="Go to Homepage"><strong>Grand Rounds Ping Pong</strong></a>
+		</header>
+		<div id="b">
+			<article>
+		
