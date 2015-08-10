@@ -17,6 +17,7 @@ if (isset($_GET['userId']) && filter_var($_GET['userId'], FILTER_VALIDATE_INT, a
 // If an invalid userId, show and error and terminate the script:
 if (!$userId) {
 	echo '<p class="error">This page has been accessed in error!</p>';
+        mysqli_close($dbc);
 	include ('includes/footer.html');
 	exit();
 }
