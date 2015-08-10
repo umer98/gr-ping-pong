@@ -30,7 +30,6 @@ $db = substr($url["path"], 1);
 
 // Make the connection:
 $dbc = mysqli_connect();
-if (!$dbc) { die("mysqli_init failed"); }
 
 mysqli_ssl_set($dbc, "../other/bb8c390b34cb99-key.pem", "../other/bb8c390b34cb99-cert.pem", "../other/cleardb-ca.pem",NULL,NULL);
 
