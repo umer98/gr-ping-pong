@@ -37,6 +37,7 @@ mysqli_ssl_set($dbc, "../other/bb8c390b34cb99-key.pem", "../other/bb8c390b34cb99
 // If no connection could be made, trigger an error:
 if (!mysqli_real_connect($dbc, $server, $username, $password, $db)) {
 	trigger_error ('Could not connect to MySQL: ' . mysqli_connect_error() );
+        console.log('true');
 } else { // Otherwise, set the encoding:
 	mysqli_set_charset($dbc, 'utf8');
 }
