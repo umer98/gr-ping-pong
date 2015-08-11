@@ -4,8 +4,16 @@
 			<h4>Navigation</h4>
                         <ul id="navUL">
                             <li><a href="index.php">Leaderboard</a></li>
-                            <li><a href="addPlayer.php">Add Player</a></li>
-                            <li><a href="game.php">New Game</a></li>
+                            <?php
+                            if (!isset($_SESSION['userId'])) {
+                                print '<li id="login"><a href="login.php">Login</a></li>
+                                <li id="register"><a href="register.php">Register</a></li>';
+                            }
+                            print '<li><a href="game.php">New Game</a></li>';
+                            if (isset($_SESSION['userId'])) {
+                                print '<li><a href="logout.php">Logout</a></li>';
+                            }
+                            ?>
 			</ul>
 		</nav>
 		
