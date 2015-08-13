@@ -24,11 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	// Array for storing errors:
 	$errors = array();
 	
-	// Validate the username:
-	if (isset($_POST['username']) && !empty($_POST['username'])) {
-		$u = mysqli_real_escape_string ($dbc, $_POST['username']);
+	// Validate the email:
+	if (isset($_POST['email']) && !empty($_POST['email'])) {
+		$u = mysqli_real_escape_string ($dbc, $_POST['email']);
 	} else {
-		$errors[] = 'You forgot to enter your username!';
+		$errors[] = 'You forgot to enter your email!';
 	}
 	
 	// Validate the password:
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	if (empty($errors)) { // No errors!
 		
 		// Query the database:
-		$q = "SELECT userId, username, firstName, lastName FROM users WHERE (username='$u' AND userpass=SHA1('$p'))";
+		$q = "SELECT userId, email, firstName, lastName FROM users WHERE (email='$u' AND userpass=SHA1('$p'))";
 		$r = mysqli_query ($dbc, $q) or trigger_error("Query: $q\n<br />MySQL Error: " . mysqli_error($dbc));
 		
 		if (@mysqli_num_rows($r) == 1) { // A match was made.
@@ -86,8 +86,8 @@ if (isset($errors) && is_array($errors)) {
 // Show the form:
 ?>
 <form action="login.php" method="post" id="loginForm">
-	<label>Username</label>
-	<input name="username" id="username" type="text">
+	<label>Email</label>
+	<input name="email" id="email" type="email">
 	<label>Password</label>
 	<input name="userpass" id="userpass" type="password">
 	<br>

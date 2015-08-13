@@ -12,7 +12,7 @@
 // ************ SETTINGS ************ //
 
 // Flag variable for site status:
-define('LIVE', TRUE);
+define('LIVE', FALSE);
 
 // Admin contact address:
 define('EMAIL', 'omarviz@gmail.com', true);
@@ -21,15 +21,21 @@ define('EMAIL', 'omarviz@gmail.com', true);
 define ('BASE_URL', 'https://powerful-forest-3806.herokuapp.com/index.php', true);
 
 // Connect to database
-$url = parse_url(getenv("CLEARDB_DATABASE_URL"));
+//$url = parse_url(getenv("CLEARDB_DATABASE_URL"));
 
-$server = $url["host"];
-$username = $url["user"];
-$password = $url["pass"];
-$db = substr($url["path"], 1);
+//$server = $url["host"];
+//$username = $url["user"];
+//$password = $url["pass"];
+//$db = substr($url["path"], 1);
+
+DEFINE ('DB_USER', 'umer98');
+DEFINE ('DB_PASSWORD', '123forme');
+DEFINE ('DB_HOST', 'localhost');
+DEFINE ('DB_NAME', 'ping_pong');
 
 // Make the connection:
-$dbc = @mysqli_connect ($server, $username, $password, $db);
+$dbc = @mysqli_connect (DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+//$dbc = @mysqli_connect ($server, $username, $password, $db);
 
 // If no connection could be made, trigger an error:
 if (!$dbc) {

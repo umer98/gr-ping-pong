@@ -36,15 +36,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') { // Handle the form.
                 $errors[] = 'You forgot to enter your last name!';
         }
         
-	// Validate the username:
-	if (isset($_POST['username']) && !empty($_POST['username'])) {
-                $u = mysqli_real_escape_string ($dbc, trim(strip_tags($_POST['username'])));
-                $search = mysqli_query($dbc, "SELECT username FROM users WHERE username='".$u."'");
+	// Validate the email:
+	if (isset($_POST['email']) && !empty($_POST['email'])) {
+            if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+                $u = mysqli_real_escape_string ($dbc, trim(strip_tags($_POST['email'])));
+                $search = mysqli_query($dbc, "SELECT email FROM users WHERE email='".$u."'");
                 if (@mysqli_num_rows($search) != 0) {
-                    $errors[] = 'Username already exists!';
+                    $errors[] = 'An account with that email already exists!';
                 }
+            } else {
+                $errors[] = 'The email entered is not valid!';
+            }
 	}  else {
-		$errors[] = 'You forgot to enter your username!';
+		$errors[] = 'You forgot to enter your email!';
 	}
 	
 	// Validate the password:
@@ -64,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') { // Handle the form.
                 $win = 0;
                 $loss = 0;
 		// Define the Query:
-		$q = "INSERT INTO users (firstName, lastName, username, userpass, ratio, wins, losses) VALUES ('$fName', '$lName','$u', '$p', '$ratio', '$win', '$loss')";
+		$q = "INSERT INTO users (firstName, lastName, email, userpass, ratio, wins, losses) VALUES ('$fName', '$lName','$u', '$p', '$ratio', '$win', '$loss')";
 		
                 // Execute the query:
                 if (@mysqli_query($dbc, $q)) {
@@ -105,8 +109,8 @@ if (isset($errors) && is_array($errors)) {
     <input name="firstname" id="firstName" type="text" required>
     <label>Last Name</label>
     <input name="lastname" id="lastName" type="text" required>
-    <label>Username</label>
-    <input name="username" id="username" type="text" required>
+    <label>Email</label>
+    <input name="email" id="email" type="email" required>
     <label>Password</label>
     <input name="userpass" id="userpass" type="password" required>
     <label>Confirm Password:</label>

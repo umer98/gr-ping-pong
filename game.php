@@ -25,36 +25,50 @@ if (!isset($_SESSION['userId'])) {
             // Array for storing errors:
             $errors = array();
 
-            // Validate player 1:
-            if (isset($_POST['player1']) && !empty($_POST['player1'])) {
-                    $p1 = mysqli_real_escape_string ($dbc, $_POST['player1']);
-                    // Validate player 2:
-                    if (isset($_POST['player2']) && !empty($_POST['player2'])) {
-                            $p2 = mysqli_real_escape_string ($dbc, $_POST['player2']);
-                            // Validate player 2:
-                            if ($_POST['player1'] != $_POST['player2']) {
-                                    $p2 = mysqli_real_escape_string ($dbc, $_POST['player2']);
-                            } else {
-                                    $errors[] = "A player can't play themself!";
-                            }
-                    } else {
-                            $errors[] = 'You forgot to select the loser!';
-                    }
+            // Validate result:
+            if (isset($_POST['result']) && !empty($_POST['result'])) {
+                    $result = mysqli_real_escape_string ($dbc, $_POST['result']);
             } else {
-                    $errors[] = 'You forgot to select the winner!';
+                    $errors[] = 'You forgot to select the result!';
+            }
+            
+            // Validate opponent:
+            if (isset($_POST['opponent']) && !empty($_POST['opponent'])) {
+                $p2 = mysqli_real_escape_string ($dbc, $_POST['opponent']);
+                $result = mysqli_query($dbc, "SELECT email FROM users WHERE userId='".$p2."'");
+                $oppEmail = mysqli_fetch_array($result, MYSQLI_NUM);
+            } else {
+                    $errors[] = 'You forgot to select your opponent!';
             }
 
             if (empty($errors)) { // No errors!
+                if($result = 1) {
+                    $winner = $_SESSION['userId'];
+                    $loser = $p2;
+                    $oppResult = 'lost';
+                } else {
+                    $winner = $p2;
+                    $loser = $_SESSION['userId'];
+                    $oppResult = 'won';
+                }
+                    
                     $time = date("Y-m-d H:i:s");
                     // Query the database:
-                    $q1 = "UPDATE users SET wins = wins + 1, ratio = 1 - (losses/(wins + losses)) WHERE userId = '".$p1."'";
-                    $q2 = "UPDATE users SET losses = losses + 1, ratio = 1 - (losses/(wins + losses)) WHERE userId = '".$p2."'";
-                    $q3 = "INSERT INTO games (winner, loser, timePlayed) VALUES ('$p1', '$p2', '$time')";
+                    $q1 = "UPDATE users SET wins = wins + 1, ratio = 1 - (losses/(wins + losses)) WHERE userId = '".$winner."'";
+                    $q2 = "UPDATE users SET losses = losses + 1, ratio = 1 - (losses/(wins + losses)) WHERE userId = '".$loser."'";
+                    $q3 = "INSERT INTO games (winner, loser, timePlayed) VALUES ('$winner', '$loser', '$time')";
 
                     if (@mysqli_query($dbc, $q1)) {
                         if (@mysqli_query($dbc, $q2)) {
                             if (@mysqli_query($dbc, $q3)) {
-
+                                
+                                $message = 'Hi,\r\nYou '.$oppResult.' against '.$_SESSION["firstName"].' '
+                                        .$_SESSION["lastName"].'.\r\n This match was logged by '
+                                        .$_SESSION["firstName"].' '.$_SESSION["lastName"].' at '.$time
+                                        .' PST.\r\nThanks,\r\nGR Ping Pong';
+                                $message = wordwrap($message, 70, "\r\n");
+                                mail($oppEmail[0], 'New Ping Pong Match Logged', $message, 'From: email@grpingpong.com');
+                                
                                 mysqli_close($dbc);
 
                                 // Display the status:
@@ -93,35 +107,28 @@ if (!isset($_SESSION['userId'])) {
     }
 
     // Show the form:
-    ?>
-    <form action="game.php" method="post" id="gameForm">
-            <select name="player1" id="player1">
-                <option value="">--Winning Player--</option>
-                <?php
-                $query1 = "SELECT userId, firstName, lastName FROM users ORDER BY firstName";
+    echo '<form action="game.php" method="post" id="gameForm">'
+            . $_SESSION["firstName"] . ' ' . $_SESSION["lastName"] . ' ' .
+            '<select name="result" id="result">
+                <option value="">--Result--</option>
+                <option value="1">Won</option>
+                <option value="2">Lost</option>
+            </select>
+            &nbsp;<span>Against</span>&nbsp;
+            <select name="opponent" id="opponent">
+                <option value="">--Opponent--</option>';
+                
+                $query1 = "SELECT userId, firstName, lastName FROM users WHERE userId != '".$_SESSION['userId']."' ORDER BY firstName";
                 $result1 = mysqli_query ($dbc, $query1) or trigger_error("Query: $query1\n<br />MySQL Error: " . mysqli_error($dbc));
                 while(list($userId, $firstName, $lastName) = mysqli_fetch_array($result1, MYSQLI_NUM)) {
                     $name = $firstName . ' ' . $lastName;
                     echo "<option value=\"".$userId."\">".$name."</option>\n";
                 }
-                ?>
-            </select><span>&nbsp;&nbsp;defeated&nbsp;</span>
-            <select name="player2" id="player2">
-                <option value="">--Losing Player--</option>
-                <?php
-                $query2 = "SELECT userId, firstName, lastName FROM users ORDER BY firstName";
-                $result2 = mysqli_query ($dbc, $query2) or trigger_error("Query: $query2\n<br />MySQL Error: " . mysqli_error($dbc));
-                while(list($userId, $firstName, $lastName) = mysqli_fetch_array($result2, MYSQLI_NUM)) {
-                    $name = $firstName . ' ' . $lastName;
-                    echo "<option value=\"".$userId."\">".$name."</option>\n  ";
-                }
-                ?>
-            </select>
+                
+            echo '</select>
             <br>
             <input class="button" type="submit" value="Submit">
-    </form>
+    </form>';
 
-    <script src="js/game.js"></script>
-
-    <?php include ('includes/footer.html');
+    include ('includes/footer.html');
 } ?>

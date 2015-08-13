@@ -5,7 +5,7 @@
 (function() {
     'use strict';
 
-    // Function used for showing errors messages:
+        // Function used for showing errors messages:
 	function showErrorMessage(message) {
 	    var errorDiv = U.$('errorDiv');
 	    if (errorDiv) { // Already exists; update.
@@ -19,8 +19,8 @@
 	    } // End of messageDiv IF-ELSE
 	}
 
-    // Function called when the form is submitted.
-    // Function validates the form data and performs an Ajax request.
+        // Function called when the form is submitted.
+        // Function validates the form data and performs an Ajax request.
 	function validateForm(e) {
 
 	    // Get the event object:
@@ -33,15 +33,17 @@
 	        e.returnValue = false;
 	    }
 
-        // Get references to the form elements:
+                // Get references to the form elements:
                 var firstName = U.$('firstName').value;
 		var lastName = U.$('lastName').value;
-		var username = U.$('username').value;
+		var email = U.$('email').value;
 		var userpass = U.$('userpass').value;
                 var userpass2 = U.$('userpass2').value;
+                
+                var emailCheck = U.validateEmail(email);
 
 		// Basic validation:
-		if ( (firstName.length > 0) && (lastName.length > 0) && (username.length > 0) && (userpass.length > 0) && (userpass2.length > 0) ) {
+		if ( (firstName.length > 0) && (lastName.length > 0) && (email.length > 0) && (emailCheck) && (userpass.length > 0) && (userpass2.length > 0) ) {
                         // Perform an Ajax request:
 			var ajax = U.getXMLHttpRequestObject();
 			ajax.onreadystatechange = function() {
@@ -70,10 +72,10 @@
 							U.$('message').className = 'good';
                                                         
                                                 } else if (ajax.responseText == 'EXISTS') {
-                                                    showErrorMessage('<h2>Error!</h2><p class="error">That username already exists! Please enter a different username.</p>');
+                                                    showErrorMessage('<h2>Error!</h2><p class="error">An account with that Email already exists!</p>');
                                                     
 						} else { // Bad response, show an error:
-						    showErrorMessage('<h2>Error!</h2><p class="error">The submitted values do not match those on file!</p>');
+						    showErrorMessage('<h2>Error!</h2><p class="error">The account could not be created!</p>');
 						}
 
 						// Clear the Ajax object:
@@ -90,7 +92,7 @@
 			// Perform the request:
 			ajax.open('POST', 'ajax/register.php', true);
 			ajax.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-			var data = 'firstname=' + encodeURIComponent(firstName) + '&lastname=' + encodeURIComponent(lastName) + '&username=' + encodeURIComponent(username) + '&userpass=' + encodeURIComponent(userpass) + '&userpass2=' + encodeURIComponent(userpass2);
+			var data = 'firstname=' + encodeURIComponent(firstName) + '&lastname=' + encodeURIComponent(lastName) + '&email=' + encodeURIComponent(email) + '&userpass=' + encodeURIComponent(userpass) + '&userpass2=' + encodeURIComponent(userpass2);
 			ajax.send(data);    
     
 			} else { // Didn't complete the form:
@@ -103,8 +105,11 @@
                             if (lastName.length == 0) {
 			        message += '<li class="error">You forgot to enter your last name!</li>'
 			    }
-                            if (username.length == 0) {
-			        message += '<li class="error">You forgot to enter your username!</li>'
+                            if (email.length == 0) {
+			        message += '<li class="error">You forgot to enter your email!</li>'
+			    }
+                            if (emailCheck == false) {
+			        message += '<li class="error">The email entered is not valid!</li>'
 			    }
 			    if (userpass.length == 0) {
 			        message += '<li class="error">You forgot to enter your password!</li>'

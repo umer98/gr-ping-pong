@@ -34,11 +34,11 @@
 	    }
 
                 // Get references to the form elements:
-		var p1 = U.$('player1').value;
-		var p2 = U.$('player2').value;
+		var result = U.$('result').value;
+		var p2 = U.$('opponent').value;
                 
 		// Basic validation:
-		if ( (p1.length > 0) && (p2.length > 0) && (p1 != p2) ) {
+		if ( (result.length > 0) && (p2.length > 0) ) {
                         
                         // Perform an Ajax request:
 			var ajax = U.getXMLHttpRequestObject();
@@ -86,24 +86,19 @@
 			// Perform the request:
 			ajax.open('POST', 'ajax/game.php', true);
 			ajax.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-			var data = 'player1=' + encodeURIComponent(p1) + '&player2=' + encodeURIComponent(p2);
+			var data = 'result=' + encodeURIComponent(result) + '&opponent=' + encodeURIComponent(p2);
 			ajax.send(data);    
     
 			} else { // Didn't complete the form:
 
 			    // Build up the error message:
 			    var message = '<p>The following error(s) occurred:<ul>';
-			    if (p1.length == 0) {
-			        message += '<li class="error">You forgot to select the winner!</li>'
+			    if (result.length == 0) {
+			        message += '<li class="error">You forgot to select the result!</li>'
 			    }
 			    if (p2.length == 0) {
-			        message += '<li class="error">You forgot to select the loser!</li>'
+			        message += '<li class="error">You forgot to select the opponent!</li>'
 			    }
-                            else {
-                                if (p1 == p2) {
-                                    message += "<li class='error'>A player can't play themself!</li>"
-                                }
-                            }
 			    message += '</ul></p>';
     
 			    // Show the errors in a DIV:

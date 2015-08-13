@@ -34,11 +34,13 @@
 	    }
 
         // Get references to the form elements:
-		var username = U.$('username').value;
+		var email = U.$('email').value;
 		var userpass = U.$('userpass').value;
-
+                
+                var emailCheck = U.validateEmail(email);
+                
 		// Basic validation:
-		if ( (username.length > 0) && (userpass.length > 0) ) {
+		if ( (email.length > 0) && (emailCheck) && (userpass.length > 0) ) {
 
             // Perform an Ajax request:
 			var ajax = U.getXMLHttpRequestObject();
@@ -90,15 +92,18 @@
 			// Perform the request:
 			ajax.open('POST', 'ajax/login.php', true);
 			ajax.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-			var data = 'username=' + encodeURIComponent(username) + '&userpass=' + encodeURIComponent(userpass);
+			var data = 'email=' + encodeURIComponent(email) + '&userpass=' + encodeURIComponent(userpass);
 			ajax.send(data);    
     
 			} else { // Didn't complete the form:
 
 			    // Build up the error message:
 			    var message = '<h2>Error!</h2><p>The following error(s) occurred:<ul>';
-			    if (username.length == 0) {
-			        message += '<li class="error">You forgot to enter your username!</li>';
+			    if (email.length == 0) {
+			        message += '<li class="error">You forgot to enter your email!</li>';
+			    }
+                            if (emailCheck == false) {
+			        message += '<li class="error">The email entered is not valid!</li>'
 			    }
 			    if (userpass.length == 0) {
 			        message += '<li class="error">You forgot to enter your password!</li>';
